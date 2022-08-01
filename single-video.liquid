@@ -1,0 +1,191 @@
+/*wanderlust-slings*/
+<section {% if section.settings.select != blank %}id="{{section.settings.select | handleize }}"{% endif%} class="single-videos active_section section is-width-standard" data-section-id="{{ section.id }}">
+
+  <div class="page-width">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="text-center header-top medium-width">
+          {% if section.settings.title != blank %}
+            <div class="sig s_b_heading">{{ section.settings.title }}</div>
+          {% endif %}
+
+          <div class="hl"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-width">
+
+    <div class="video_width">
+         {%- if section.settings.video_link != blank -%}
+        <div id="Video-{{ section.id }}"
+            class="video"
+            data-id="{{ section.settings.video_link.id }}"
+            data-type="{{ section.settings.style }}"
+
+            data-source="{{ section.settings.video_link.type }}"
+            data-video-url="{{section.settings.video_link}}">
+            <div class="video-poster">
+              <div class="playbutton" data-play data-id="{{ section.settings.video_link.id }}">
+                {% render 'icon-play-button' %}
+              </div>
+              <div class="video-player"></div>
+            </div>
+            
+        </div>
+      {%- endif -%}
+
+     
+
+
+    </div>
+
+  </div>
+
+</section>
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+        (function($) {
+          //add jQuery code
+          var playerID = $("#Video-{{ section.id }}");
+          var source = playerID.attr('data-source');
+          var videoID = playerID.attr('data-id');
+          var videoAutoPlay = false;
+          var thumbnail;
+
+ 
+
+
+          if (source == 'youtube') {
+            var video_player = '<div class="video-container"><iframe id="youtube-frame" width="100%" height="100%" src="https://www.youtube.com/embed/' + videoID + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+
+              thumbnail = 'https://img.youtube.com/vi/' + videoID + '/maxresdefault.jpg';
+
+              if (thumbnail != null ) {
+                playerID.find('.video-poster').append('<img src="'+ thumbnail +'" />');
+                  playerID.find('.playbutton').show();
+
+       
+
+              playerID.find('.playbutton').click(function(event) {
+                    /* Act on the event */
+                    $(this).find('.play-button').hide();
+                    $(this).next('.video-player').append(video_player);
+                    $("#youtube-frame")[0].src += "?autoplay=1";
+
+                    //Yplayer.playVideo()
+                    
+                    //console.log('ddd'+videoID)
+                  
+
+
+                  });
+
+                  // playerID.find('.playbutton').click(function(event) {
+                  //   /* Act on the event */
+                  //   $(this).find('.play-button').hide();
+                  //   $(this).next('.video-player').append(video_player);
+
+                    
+
+                  //     var Yplayer;
+                  //     function onYouTubePlayerAPIReady() {
+                  //       Yplayer = new YT.Player('youtube-frame', {
+                  //         videoId: videoID
+                  //       });
+                  //     }
+                  //   Yplayer.playVideo();
+                    
+                  //   //console.log('ddd'+videoID)
+                  
+
+
+                  // });
+
+              }
+              //playerID.append(video_player);
+
+
+          }else if (source == 'vimeo'){
+
+            var video_player = '<div class="video-container"><iframe id="vimeo-frame" src="https://player.vimeo.com/video/' + videoID + '?autoplay=' + videoAutoPlay + '" width="100%" height="100%"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay"></iframe></div>';
+
+             
+
+              $.getJSON('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + videoID, {format: "json"}, function(data) {
+                thumbnail = data.thumbnail_url;
+                var videoID = data.video_id;
+
+                if (thumbnail != null ) {
+                  playerID.find('.video-poster').append('<img src="'+ data.thumbnail_url +'" />');
+                  playerID.find('.playbutton').show();
+
+                  const options = {
+                      id: videoID,
+                      control: false
+                  };
+
+                  playerID.find('.playbutton').click(function(event) {
+                    /* Act on the event */
+                    $(this).find('.play-button').hide();
+                    $(this).next('.video-player').append(video_player);
+
+                    const handstickPlayer  = new Vimeo.Player('vimeo-frame', options);
+                    handstickPlayer.play();
+                    
+                    //console.log('ddd'+videoID)
+                  
+
+
+                  });
+                  //console.log(data)
+                }
+                console.log(videoID)
+                //console.log(thumbnail)
+              });
+
+
+              
+
+              //playerID.append(video_player);
+          }
+
+      })(jQuery);
+    });
+
+</script>
+{% comment %}https://www.grazitti.com/resource/articles/a-simple-step-by-step-guide-to-create-a-video-module-with-overlay-images-in-shopify/{% endcomment %}
+
+{% schema %}
+  {
+    "name": "Single video",
+    "class": "single-video",
+    "settings": [
+      {
+        "type": "text",
+        "id": "select",
+        "label": "Unique ID",
+        "info": "Type same name as select carrier Heading"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "sling basics"
+      },
+      {
+        "type": "video_url",
+        "id": "video_link",
+        "label": "Video link",
+        "accept": ["youtube", "vimeo"],
+        "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+      } 
+    ],
+    "presets": [
+      {
+        "name": "Single video"
+      }
+    ]
+  }
+{% endschema %}
