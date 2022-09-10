@@ -1,4 +1,85 @@
 /*wanderlust-slings*/
+<style>
+.video_width {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 1040px;
+}
+
+.video-poster {
+	width: 100%;
+	text-align: center;
+	position: relative;
+}
+
+.video-poster:after {
+	content: "";
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: #0000004d;
+	z-index: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+
+.video-poster:hover:after {
+	background: transparent;
+}
+
+.video-poster img {
+	width: 100%;
+}
+
+.playbutton {
+	display: none;
+	position: absolute;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	top: 50%;
+	cursor: pointer;
+	z-index: 2;
+	width: 93px;
+}
+
+.playbutton svg {
+	width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+
+.video-player {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 100%;
+	z-index: 1;
+}
+
+.video-container {
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+
+.video-container::after {
+	padding-top: 56.25%;
+	display: block;
+	content: '';
+}
+
+.video-container iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+</style>
 <section {% if section.settings.select != blank %}id="{{section.settings.select | handleize }}"{% endif%} class="single-videos active_section section is-width-standard" data-section-id="{{ section.id }}">
 
   <div class="page-width">
@@ -27,7 +108,8 @@
             data-video-url="{{section.settings.video_link}}">
             <div class="video-poster">
               <div class="playbutton" data-play data-id="{{ section.settings.video_link.id }}">
-                {% render 'icon-play-button' %}
+                <svg class="play-button" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="117.333" height="123.805" viewBox="0 0 117.333 123.805"> <defs> <filter id="Path_205" x="0" y="0" width="117.333" height="123.805" filterUnits="userSpaceOnUse"> <feOffset dy="3" input="SourceAlpha"></feOffset> <feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur> <feFlood flood-opacity="0.325"></feFlood> <feComposite operator="in" in2="blur"></feComposite> <feComposite in="SourceGraphic"></feComposite></filter></defs> <g id="Play_Button" data-name="Play Button" transform="translate(12 9)"> <g transform="matrix(1, 0, 0, 1, -12, -9)" filter="url(#Path_205)"> <path id="Path_205-2" data-name="Path 205" d="M600.772,344.5c0-13.695.278-27.4-.114-41.08-.2-7.011,6.464-10.658,12.523-7.3,25.152,13.927,50.412,27.657,75.653,41.421,2.983,1.626,5.184,3.712,5.14,7.328-.042,3.485-2.2,5.505-5.084,7.079-25.241,13.765-50.5,27.5-75.655,41.417-6.331,3.5-12.8-.443-12.589-7.5C601.069,372.088,600.771,358.291,600.772,344.5Zm6.958-43.63V388.6l80.2-43.872Z" transform="translate(-588.64 -285.86)" fill="#fff"></path></g></g>
+              </svg>
               </div>
               <div class="video-player"></div>
             </div>
